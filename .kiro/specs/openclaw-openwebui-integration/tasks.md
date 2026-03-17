@@ -24,7 +24,7 @@ Customize the Open WebUI fork to serve as Boutikio's partner-facing AI chat inte
     - This function will be used by EmbeddedPage.svelte and tested via property-based tests
     - _Requirements: 6.5, 6.6_
 
-  - [ ]* 1.3 Write property test for theme sync message completeness
+  - [ ] 1.3 Write property test for theme sync message completeness
     - **Property 2: Theme sync message completeness**
     - **Validates: Requirements 6.5, 6.6**
     - Use vitest + fast-check to generate random CSS color strings and random boolean isDark values
@@ -58,7 +58,7 @@ Customize the Open WebUI fork to serve as Boutikio's partner-facing AI chat inte
     - _Requirements: 6.1_
 
 
-  - [ ]* 2.7 Write property test for navigation-to-iframe mapping consistency
+  - [ ] 2.7 Write property test for navigation-to-iframe mapping consistency
     - **Property 1: Navigation-to-iframe mapping consistency**
     - **Validates: Requirements 5.1, 6.1**
     - Use vitest + fast-check to generate random subsets of the navigation config array
