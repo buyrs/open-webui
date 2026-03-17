@@ -17,7 +17,7 @@ This document covers everything that needs to be done in the Open WebUI fork to 
 5. **Custom Sidebar** — Add navigation items for embedded pages (billing, settings, etc.)
 6. **Embedded Pages** — Custom SvelteKit routes that render Boutikio pages in iframes
 7. **Branding** — Boutikio logo, colors, hide unnecessary Open WebUI features
-8. **NemoClaw Prompt** — Configure system prompt for the AI personality
+8. **Maya Prompt** — Configure system prompt for the AI personality
 
 ---
 
@@ -121,11 +121,11 @@ Model:     qwen3.5-plus
    - API Key: your DashScope key
 3. Go to Settings → Models
 4. Set `qwen3.5-plus` as default model
-5. Set NemoClaw system prompt (see below)
+5. Set Maya system prompt (see below)
 
 ### Verify
 
-Test in chat: "Hello, who are you?" → should respond as NemoClaw with the configured system prompt.
+Test in chat: "Hello, who are you?" → should respond as Maya with the configured system prompt.
 
 ### Pricing Reference
 
@@ -293,12 +293,12 @@ Each route renders an iframe pointing to the corresponding Boutikio embedded pag
 
 ---
 
-## NemoClaw System Prompt
+## Maya System Prompt
 
 Configure in Open WebUI admin panel → Models → qwen3.5-plus → System Prompt:
 
 ```
-You are NemoClaw, the AI assistant for Boutikio loyalty program management.
+You are Maya, the AI assistant for Boutikio loyalty program management.
 
 IDENTITY:
 - You help partners manage their loyalty programs through conversation
@@ -437,7 +437,7 @@ docker push boutikio/open-webui
 1. Fork Open WebUI repo
 2. Deploy with Docker on `chat.boutikio.com`
 3. Configure DashScope connection (Qwen3.5-Plus)
-4. Set NemoClaw system prompt
+4. Set Maya system prompt
 5. Test: basic chat works
 
 ### Phase 2: OAuth Integration (Day 3-7)

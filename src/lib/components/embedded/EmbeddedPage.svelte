@@ -19,13 +19,24 @@
 	let mutationObserver: MutationObserver | null = null;
 
 	/**
+	 * Derives the target origin from the src prop for secure postMessage.
+	 */
+	$: targetOrigin = (() => {
+		try {
+			return new URL(src).origin;
+		} catch {
+			return '';
+		}
+	})();
+
+	/**
 	 * Sends theme sync message to the iframe.
 	 */
 	const sendThemeSync = () => {
-		if (!iframeEl?.contentWindow) return;
+		if (!iframeEl?.contentWindow || !targetOrigin) return;
 
 		const message: ThemeSyncMessage = buildThemeSyncMessage();
-		iframeEl.contentWindow.postMessage(message, '*');
+		iframeEl.contentWindow.postMessage(message, targetOrigin);
 	};
 
 	/**

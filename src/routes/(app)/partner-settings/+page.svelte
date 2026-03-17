@@ -1,15 +1,15 @@
-<script>
+<script lang="ts">
 	import EmbeddedPage from '$lib/components/embedded/EmbeddedPage.svelte';
 	import SEO from '$lib/components/SEO.svelte';
+	import { page } from '$app/stores';
+	import { embeddedUrl, parseLanguage } from '$lib/config/boutikio';
+
+	$: lang = parseLanguage($page.url.searchParams.get('lang'));
 </script>
 
-<SEO
-	title="Account Settings"
-	description="Configure your Boutikio account settings, preferences, and notification options."
-	keywords="account settings, preferences, notifications, profile, loyalty program"
-/>
+<SEO page="settings" {lang} />
 
 <EmbeddedPage
-	src="https://app.boutikio.com/embedded/settings"
+	src={embeddedUrl('settings')}
 	title="Account Settings"
 />

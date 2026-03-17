@@ -101,7 +101,7 @@ OPENAI_API_KEY: ${DASHSCOPE_API_KEY}
 DEFAULT_MODELS: qwen3.5-plus
 ```
 
-NemoClaw system prompt configured in admin panel under Models → qwen3.5-plus.
+Maya system prompt configured in admin panel under Models → qwen3.5-plus.
 
 **Satisfies:** Requirements 2, 8
 
@@ -390,7 +390,7 @@ These variables are sent to embedded iframes via postMessage:
 
 ## OpenClaw Tool Reference
 
-NemoClaw can invoke 42 tools through the OpenClaw API. These tools are auto-discovered from the OpenAPI spec at `https://app.boutikio.com/openclaw/openapi.json`.
+Maya can invoke 42 tools through the OpenClaw API. These tools are auto-discovered from the OpenAPI spec at `https://app.boutikio.com/openclaw/openapi.json`.
 
 ### Tool Categories
 
@@ -407,7 +407,7 @@ NemoClaw can invoke 42 tools through the OpenClaw API. These tools are auto-disc
 | **Gamification** | 4 | 0 | Achievements, point multipliers, progress, leaderboards |
 | **Geofencing** | 2 | 0 | Location-based notification triggers |
 
-### Key Tools for NemoClaw
+### Key Tools for Maya
 
 **Onboarding Flow:**
 - `create_partner_profile` — Create store details (name, address, phone, website)
@@ -455,7 +455,7 @@ NemoClaw can invoke 42 tools through the OpenClaw API. These tools are auto-disc
 
 **Free tier limit:** 100 active members (configurable via `OPENCLAW_FREE_MEMBER_LIMIT`)
 
-When a gated tool is blocked, NemoClaw receives an error response and gracefully explains the subscription requirement, pointing partners to the Billing page in the sidebar.
+When a gated tool is blocked, Maya receives an error response and gracefully explains the subscription requirement, pointing partners to the Billing page in the sidebar.
 
 ---
 

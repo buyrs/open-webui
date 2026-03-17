@@ -123,7 +123,7 @@ OPENWEBUI_REDIRECT_URI=https://chat.boutikio.com/oauth/callback
 
 ### Why
 
-Open WebUI calls NemoClaw (Qwen3.5-Plus). When NemoClaw decides to use a tool, it calls OpenClaw. OpenClaw is a thin API layer that validates the request, checks permissions, and delegates to existing Boutikio services.
+Open WebUI calls Maya (Qwen3.5-Plus). When Maya decides to use a tool, it calls OpenClaw. OpenClaw is a thin API layer that validates the request, checks permissions, and delegates to existing Boutikio services.
 
 ### Architecture
 

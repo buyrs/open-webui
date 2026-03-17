@@ -1,15 +1,15 @@
-<script>
+<script lang="ts">
 	import EmbeddedPage from '$lib/components/embedded/EmbeddedPage.svelte';
 	import SEO from '$lib/components/SEO.svelte';
+	import { page } from '$app/stores';
+	import { embeddedUrl, parseLanguage } from '$lib/config/boutikio';
+
+	$: lang = parseLanguage($page.url.searchParams.get('lang'));
 </script>
 
-<SEO
-	title="Card Preview"
-	description="Preview and customize your digital loyalty card design for Apple Wallet and Google Wallet."
-	keywords="card preview, loyalty card, Apple Wallet, Google Wallet, digital card design"
-/>
+<SEO page="card" {lang} />
 
 <EmbeddedPage
-	src="https://app.boutikio.com/embedded/card-preview"
+	src={embeddedUrl('card-preview')}
 	title="Card Preview"
 />

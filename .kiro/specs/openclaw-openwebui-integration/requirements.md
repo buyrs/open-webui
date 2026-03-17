@@ -5,7 +5,7 @@
 | Term | Definition |
 |------|-----------|
 | Open WebUI | Self-hosted AI chat platform, forked and customized for Boutikio |
-| NemoClaw | AI personality / system prompt running on Qwen3.5-Plus |
+| Maya | AI personality / system prompt running on Qwen3.5-Plus |
 | OpenClaw | MCP/tool server built in Laravel that exposes Boutikio services to the LLM |
 | Boutikio | Laravel 11 loyalty program backend with 289+ services |
 | DashScope | Alibaba Cloud Model Studio API (OpenAI-compatible) |
@@ -42,7 +42,7 @@
 ## Requirement 2: LLM Connection (Alibaba Cloud DashScope)
 
 ### User Stories
-- As a partner, I want to chat with NemoClaw powered by Qwen3.5-Plus so that I can manage my loyalty program through natural language.
+- As a partner, I want to chat with Maya powered by Qwen3.5-Plus so that I can manage my loyalty program through natural language.
 
 ### Acceptance Criteria
 1. The Open WebUI instance SHALL be configured with `OPENAI_API_BASE_URL` set to `https://dashscope-intl.aliyuncs.com/compatible-mode/v1`.
@@ -50,7 +50,7 @@
 3. The Open WebUI instance SHALL set `DEFAULT_MODELS` to `qwen3.5-plus`.
 
 4. WHEN a partner sends a chat message, THEN Open WebUI SHALL route the request to the Qwen3.5-Plus model via the DashScope OpenAI-compatible API.
-5. The Qwen3.5-Plus model SHALL support function calling (tool_use) so that NemoClaw can invoke OpenClaw tools.
+5. The Qwen3.5-Plus model SHALL support function calling (tool_use) so that Maya can invoke OpenClaw tools.
 
 ---
 
@@ -73,14 +73,14 @@
 ## Requirement 4: OpenClaw Tool Server Registration
 
 ### User Stories
-- As a partner, I want NemoClaw to execute actions on my behalf (create vouchers, check analytics, etc.) so that I can manage my loyalty program through chat.
+- As a partner, I want Maya to execute actions on my behalf (create vouchers, check analytics, etc.) so that I can manage my loyalty program through chat.
 
 ### Acceptance Criteria
 1. The OpenClaw tool server SHALL be registered in Open WebUI's admin panel with Name: `OpenClaw`, URL: `https://app.boutikio.com/openclaw/openapi.json`, Auth type: `system_oauth`.
 2. Open WebUI SHALL auto-discover all available tools from the OpenClaw OpenAPI specification.
 3. WHEN Qwen3.5-Plus returns a tool_call response, THEN Open WebUI SHALL execute a POST request to `https://app.boutikio.com/openclaw/tools/{toolName}` with the partner's Boutikio OAuth token in the `Authorization: Bearer` header.
 4. WHEN OpenClaw returns a tool result, THEN Open WebUI SHALL send the result back to Qwen3.5-Plus for the model to format a natural language response.
-5. IF OpenClaw returns an error or a subscription-gated response, THEN Open WebUI SHALL pass that response to Qwen3.5-Plus so NemoClaw can communicate it to the partner gracefully.
+5. IF OpenClaw returns an error or a subscription-gated response, THEN Open WebUI SHALL pass that response to Qwen3.5-Plus so Maya can communicate it to the partner gracefully.
 
 ### Reference
 - See [tools.md](tools.md) for the complete tool registry with 42 tools across 10 categories and subscription gating rules.
@@ -129,7 +129,7 @@
 4. The Open WebUI instance SHALL set `SHOW_ADMIN_DETAILS` to `false`.
 5. The Open WebUI instance SHALL set `ENABLE_COMMUNITY_SHARING` to `false`.
 6. The Open WebUI instance SHALL set `ENABLE_MESSAGE_RATING` to `false`.
-7. The model selector dropdown SHALL be hidden for non-admin users so that partners only interact with the default NemoClaw model.
+7. The model selector dropdown SHALL be hidden for non-admin users so that partners only interact with the default Maya model.
 8. Any "Powered by Open WebUI" branding SHALL be removed or hidden in the fork.
 
 ### Reference
@@ -137,22 +137,22 @@
 
 ---
 
-## Requirement 8: NemoClaw System Prompt
+## Requirement 8: Maya System Prompt
 
 ### User Stories
-- As a partner, I want NemoClaw to behave as a friendly, bilingual AI assistant that understands my loyalty program so that I can manage everything through natural conversation.
+- As a partner, I want Maya to behave as a friendly, bilingual AI assistant that understands my loyalty program so that I can manage everything through natural conversation.
 
 ### Acceptance Criteria
-1. The Qwen3.5-Plus model in Open WebUI SHALL be configured with a system prompt that defines NemoClaw's identity as the Boutikio loyalty program AI assistant.
-2. The system prompt SHALL instruct NemoClaw to match the partner's language (French or English).
-3. The system prompt SHALL instruct NemoClaw to never mention technical details such as API calls, tool names, or database operations.
-4. The system prompt SHALL instruct NemoClaw to always confirm destructive actions before executing them.
-5. The system prompt SHALL instruct NemoClaw to ask for clarification when a request is ambiguous.
-6. The system prompt SHALL instruct NemoClaw to keep responses short (2-3 sentences max unless explaining something complex).
-7. The system prompt SHALL include onboarding behavior: IF no loyalty card is set up, THEN NemoClaw SHALL initiate a guided onboarding flow (store name → address → logo → banner → rewards → welcome voucher), one step at a time.
-8. The system prompt SHALL include subscription handling: IF a partner hits the free tier limit, THEN NemoClaw SHALL explain kindly and point to the Billing page in the sidebar, while confirming that scan and reward functionality continues working.
-9. The system prompt SHALL instruct NemoClaw to evaluate uploaded images for quality (resolution, blur, lighting) before using them as logos or banners.
-10. The system prompt SHALL define NemoClaw's limitations: cannot process payments, cannot access member personal data beyond system data, cannot send messages to external platforms.
+1. The Qwen3.5-Plus model in Open WebUI SHALL be configured with a system prompt that defines Maya's identity as the Boutikio loyalty program AI assistant.
+2. The system prompt SHALL instruct Maya to match the partner's language (French or English).
+3. The system prompt SHALL instruct Maya to never mention technical details such as API calls, tool names, or database operations.
+4. The system prompt SHALL instruct Maya to always confirm destructive actions before executing them.
+5. The system prompt SHALL instruct Maya to ask for clarification when a request is ambiguous.
+6. The system prompt SHALL instruct Maya to keep responses short (2-3 sentences max unless explaining something complex).
+7. The system prompt SHALL include onboarding behavior: IF no loyalty card is set up, THEN Maya SHALL initiate a guided onboarding flow (store name → address → logo → banner → rewards → welcome voucher), one step at a time.
+8. The system prompt SHALL include subscription handling: IF a partner hits the free tier limit, THEN Maya SHALL explain kindly and point to the Billing page in the sidebar, while confirming that scan and reward functionality continues working.
+9. The system prompt SHALL instruct Maya to evaluate uploaded images for quality (resolution, blur, lighting) before using them as logos or banners.
+10. The system prompt SHALL define Maya's limitations: cannot process payments, cannot access member personal data beyond system data, cannot send messages to external platforms.
 
 ---
 

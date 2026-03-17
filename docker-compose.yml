@@ -11,6 +11,12 @@ services:
       - WEBUI_NAME=Boutikio
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
 
+      # CORS — restrict to known origins in production
+      - CORS_ALLOW_ORIGIN=https://chat.boutikio.com;https://app.boutikio.com
+
+      # Database — uncomment for PostgreSQL in production (SQLite is default)
+      # - DATABASE_URL=postgresql://user:password@db:5432/openwebui_boutikio
+
       # OAuth Configuration
       - ENABLE_OAUTH_SIGNUP=true
       - ENABLE_LOGIN_FORM=false
@@ -27,6 +33,12 @@ services:
       - SHOW_ADMIN_DETAILS=false
       - ENABLE_COMMUNITY_SHARING=false
       - ENABLE_MESSAGE_RATING=false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     restart: unless-stopped
 
 volumes:

@@ -1,16 +1,16 @@
-<script>
+<script lang="ts">
 	import EmbeddedPage from '$lib/components/embedded/EmbeddedPage.svelte';
 	import SEO from '$lib/components/SEO.svelte';
+	import { page } from '$app/stores';
+	import { embeddedUrl, parseLanguage } from '$lib/config/boutikio';
+
+	$: lang = parseLanguage($page.url.searchParams.get('lang'));
 </script>
 
-<SEO
-	title="Billing & Subscription"
-	description="Manage your Boutikio subscription, view invoices, and update payment methods for your loyalty program."
-	keywords="billing, subscription, payment, invoices, loyalty program pricing"
-/>
+<SEO page="billing" {lang} />
 
 <EmbeddedPage
-	src="https://app.boutikio.com/embedded/billing"
+	src={embeddedUrl('billing')}
 	title="Billing & Subscription"
 	allow="payment"
 />

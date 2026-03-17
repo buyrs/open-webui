@@ -116,7 +116,7 @@ Customize the Open WebUI fork to serve as Boutikio's partner-facing AI chat inte
 - Tasks marked with `*` are optional and can be skipped for faster MVP
 - Each task references specific requirements for traceability
 - Components 1-3 from the design (OAuth, LLM, OpenClaw tool server) are configuration-only — no code tasks needed, handled via environment variables and admin panel setup
-- Component 8 (NemoClaw system prompt) is configured in the admin panel, not in code
+- Component 8 (Maya system prompt) is configured in the admin panel, not in code
 - The only upstream file modified is `Sidebar.svelte` (Requirement 9.4)
 - All other changes are new files with `boutikio-` prefixed static assets (Requirement 9.5)
 - Property tests validate the two correctness properties from the design document

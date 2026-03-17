@@ -19,7 +19,7 @@ Instead of building yet another dashboard with forms, tables, and buttons, we gi
 | Component | Role | Technology |
 |-----------|------|------------|
 | **Open WebUI** | Partner-facing interface (chat + embedded pages) | Self-hosted, PWA-ready |
-| **NemoClaw** | AI personality / system prompt | Qwen3.5-Plus via Alibaba Cloud Model Studio (DashScope) |
+| **Maya** | AI personality / system prompt | Qwen3.5-Plus via Alibaba Cloud Model Studio (DashScope) |
 | **OpenClaw** | MCP server (tool execution layer) | Laravel, existing services |
 | **Boutikio** | Backend platform | Laravel 11, 289+ services |
 
@@ -32,7 +32,7 @@ Instead of building yet another dashboard with forms, tables, and buttons, we gi
 3. **Simple > Complex** — If it can't be explained in one sentence, simplify it.
 4. **One shell, one experience** — Everything lives inside Open WebUI. Partners never land on a page that looks like a different product.
 5. **Chat-first, not chat-only** — Structured pages (billing, settings) live inside Open WebUI's shell as embedded pages.
-6. **French + English** — NemoClaw speaks both fluently. Partners choose.
+6. **French + English** — Maya speaks both fluently. Partners choose.
 
 ---
 
@@ -49,7 +49,7 @@ Instead of building yet another dashboard with forms, tables, and buttons, we gi
 │                                                                  │
 │  ┌──────────┐  ┌─────────────────────────────────────────────┐  │
 │  │ Sidebar  │  │                                             │  │
-│  │          │  │   💬 Chat (NemoClaw)     ← default view     │  │
+│  │          │  │   💬 Chat (Maya)     ← default view     │  │
 │  │ 💬 Chat  │  │   💳 Billing Page       ← embedded page    │  │
 │  │ 💳 Billing│  │   ⚙️ Account Settings   ← embedded page    │  │
 │  │ ⚙️ Settings│ │   🧾 Receipt Settings  ← embedded page    │  │
@@ -62,7 +62,7 @@ Instead of building yet another dashboard with forms, tables, and buttons, we gi
                                │ OpenAI-compatible API
                                ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Qwen3.5-Plus (NemoClaw)                       │
+│                    Qwen3.5-Plus (Maya)                       │
 │                    via Alibaba Cloud DashScope API                │
 │  ┌───────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
 │  │ Function Call  │  │ Vision       │  │ Thinking Mode        │  │
@@ -138,7 +138,7 @@ If a partner is chatting in a sleek AI interface and clicks "Billing" only to la
 - Responsive design (mobile-first)
 - Plugin/extension system for custom pages
 
-### What Lives in Chat (NemoClaw)
+### What Lives in Chat (Maya)
 
 Everything operational — the stuff partners do daily:
 
@@ -161,7 +161,7 @@ Structured, form-heavy, or visual content that doesn't work well in chat:
 | **Account Settings** | Structured form data (email, password, timezone, language) | Profile form, password change, notification preferences |
 | **Receipt Settings** | Complex OCR configuration, template rules, validation thresholds | Receipt config form, template editor, test upload |
 | **Card Preview** | Visual — partners need to SEE their loyalty card | Live card preview (Apple/Google wallet mockup), QR code |
-| **Audit Log** | Tabular data with filters, pagination, export | Table of all NemoClaw actions with timestamps, status, details |
+| **Audit Log** | Tabular data with filters, pagination, export | Table of all Maya actions with timestamps, status, details |
 | **Member Directory** | Browsable list with search, filters, bulk actions | Member table with activity, level, points, last visit |
 
 ### How Embedded Pages Work
@@ -244,7 +244,7 @@ Structured, form-heavy, or visual content that doesn't work well in chat:
 │  │  └───────────────────────────┘  │  [Download QR] [Print QR]   │
 │  └─────────────────────────────────┘                             │
 │                                                                  │
-│  Want to change your card? Just tell NemoClaw in chat:           │
+│  Want to change your card? Just tell Maya in chat:           │
 │  "Change my banner" or "Update my logo"                          │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -313,7 +313,7 @@ Open WebUI session established
 JWT shared with embedded pages (same origin or postMessage)
         │
         ▼
-NemoClaw loads partner context via OpenClaw
+Maya loads partner context via OpenClaw
 ```
 
 **Registration follows the same pattern** — Open WebUI's "Sign Up" button redirects to the existing Boutikio registration page. After registration, redirect back to Open WebUI.
@@ -353,7 +353,7 @@ OpenClaw checks subscription status before executing marketing tools:
 // In OpenClaw tool execution
 if ($partner->isOverFreeLimit() && !$partner->hasActiveSubscription()) {
     if ($tool->isMarketingTool()) {
-        return NemoClawResponse::subscriptionRequired(
+        return MayaResponse::subscriptionRequired(
             "You've grown past 100 active members — that's great! "
             . "To keep using marketing features, head to the Billing page "
             . "in your sidebar to pick a plan."
@@ -362,12 +362,12 @@ if ($partner->isOverFreeLimit() && !$partner->hasActiveSubscription()) {
 }
 ```
 
-### NemoClaw Handles It Gracefully
+### Maya Handles It Gracefully
 
 ```
 Partner: "Create a 20% off voucher for this weekend"
 
-NemoClaw: "Your loyalty program has grown to 142 active members — 
+Maya: "Your loyalty program has grown to 142 active members — 
 congrats! 🎉 To keep creating vouchers and campaigns, you'll need 
 to pick a plan. Just click 'Billing' in your sidebar to see the 
 options.
@@ -393,7 +393,7 @@ Partner: "I want to offer 15% off for the next two weeks"
 Tool call: create_voucher { name: "15% Off", type: "percentage", 
   value: 15, valid_from: "2026-03-17", valid_until: "2026-03-31" }
 
-NemoClaw: "Done! I created a 15% off voucher valid through March 31st. 
+Maya: "Done! I created a 15% off voucher valid through March 31st. 
 Want me to name it something specific?"
 ```
 
@@ -403,7 +403,7 @@ Partner: "How's business going?"
 
 Tool call: get_dashboard_stats { period: "last_30_days" }
 
-NemoClaw: "Here's your last 30 days:
+Maya: "Here's your last 30 days:
 - 47 new members (up 12% from last month)
 - 312 scans total
 - 89% retention rate
@@ -416,7 +416,7 @@ Want me to dig into any of these?"
 ```
 Partner: "Pause it"
 
-NemoClaw: "Which one? You have:
+Maya: "Which one? You have:
 - 2 active vouchers: '15% Off' and 'Free Dessert Friday'
 - 1 active campaign: 'Spring Re-engagement'
 
@@ -427,11 +427,11 @@ Just let me know!"
 ```
 Partner: [uploads storefront photo] "Use this as my card banner"
 
-NemoClaw evaluates: 1200x800, not blurry, good lighting ✓
+Maya evaluates: 1200x800, not blurry, good lighting ✓
 
 Tool call: update_card { card_id, banner_image: [uploaded_file] }
 
-NemoClaw: "Nice photo! I've updated your card banner. Check the 
+Maya: "Nice photo! I've updated your card banner. Check the 
 Card Preview page in your sidebar to see how it looks."
 ```
 
@@ -439,7 +439,7 @@ Card Preview page in your sidebar to see how it looks."
 ```
 Partner: [uploads blurry dark photo] "Use this as my logo"
 
-NemoClaw: "That image is a bit too small and blurry for a logo. 
+Maya: "That image is a bit too small and blurry for a logo. 
 Could you take another one with better lighting? We also have 
 clean default designs if you'd prefer."
 ```
@@ -453,7 +453,7 @@ Tool calls:
 1. create_reward { title: "Free Coffee", points_cost: 500 }
 2. create_voucher { name: "10% Off This Month", value: 10 }
 
-NemoClaw: "All set! Created:
+Maya: "All set! Created:
 1. 'Free Coffee' reward — 500 points to redeem
 2. '10% Off This Month' voucher — valid through March 31st"
 ```
@@ -462,34 +462,34 @@ NemoClaw: "All set! Created:
 
 ## Partner Onboarding via Chat
 
-No forms. No wizards. Just a conversation. When a new partner logs in for the first time, NemoClaw walks them through setup:
+No forms. No wizards. Just a conversation. When a new partner logs in for the first time, Maya walks them through setup:
 
 ```
-NemoClaw: "Welcome to Boutikio! I'm here to help you set up your 
+Maya: "Welcome to Boutikio! I'm here to help you set up your 
 loyalty program. What's the name of your store?"
 
 Partner: "Cafe Parisien"
 
-NemoClaw: "Great name! Where is Cafe Parisien located?"
+Maya: "Great name! Where is Cafe Parisien located?"
 
 Partner: "12 rue de la Paix, Paris 75002"
 
-NemoClaw: "Perfect. Do you have a logo? Upload an image, or I can 
+Maya: "Perfect. Do you have a logo? Upload an image, or I can 
 use a clean default design."
 
 Partner: [uploads logo.png]
 
-NemoClaw: "Looks sharp! Now let's set up your first reward. What 
+Maya: "Looks sharp! Now let's set up your first reward. What 
 would you like to offer loyal customers?"
 
 Partner: "Free croissant for 200 points"
 
-NemoClaw: "Love it! Want to add another reward or create a welcome 
+Maya: "Love it! Want to add another reward or create a welcome 
 voucher for new members?"
 
 Partner: "Add free coffee for 500 points, then a 10% welcome voucher"
 
-NemoClaw: "All set! Here's what we've built:
+Maya: "All set! Here's what we've built:
 - Store: Cafe Parisien (12 rue de la Paix, Paris)
 - Logo: Uploaded
 - Rewards: Free Croissant (200pts), Free Coffee (500pts)
@@ -509,7 +509,7 @@ Partners can modify everything at any time via chat — it's not just onboarding
 ```
 Partner: "Bonjour, quoi de neuf?"
 
-NemoClaw: "Bonjour! Voici votre resume:
+Maya: "Bonjour! Voici votre resume:
 - 8 scans hier
 - 3 nouveaux membres cette semaine
 - Votre voucher '10% Off' expire dans 5 jours (12 utilisations)
@@ -522,7 +522,7 @@ Voulez-vous prolonger le voucher ou creer quelque chose de nouveau?"
 ```
 Partner: "Members haven't come back in a while. Can you help?"
 
-NemoClaw: "You have 23 members inactive for 30+ days. I can:
+Maya: "You have 23 members inactive for 30+ days. I can:
 1. Send them a PIN code with 50 bonus points
 2. Create a 'We miss you' voucher campaign
 3. Both
@@ -531,14 +531,14 @@ What sounds good?"
 
 Partner: "Option 1"
 
-NemoClaw: "Done! 23 PIN codes sent via wallet notification."
+Maya: "Done! 23 PIN codes sent via wallet notification."
 ```
 
 ### Social Media Content
 ```
 Partner: "I need an Instagram post about my new voucher"
 
-NemoClaw: "Here's a ready-to-post caption:
+Maya: "Here's a ready-to-post caption:
 
 🎁 Weekend Special at Cafe Parisien!
 Get 15% off this Saturday & Sunday.
@@ -558,23 +558,23 @@ Want me to adjust the tone?"
 1. Partner discovers Boutikio, clicks "Get Started"
 2. Creates account on Boutikio registration page
 3. Redirected to Open WebUI chat
-4. NemoClaw walks them through setup in 5-10 minutes
+4. Maya walks them through setup in 5-10 minutes
 5. Card is live, QR code available in Card Preview page
 
 ### Day 1-7 — First Members
 - QR code in store, customers scan and join
 - Partner checks in via chat: "How many members?"
-- NemoClaw reports progress, suggests improvements
+- Maya reports progress, suggests improvements
 
 ### Day 7-30 — Building Momentum
 - First campaign via chat, social media content
 - Analytics check-ins, reward adjustments
-- NemoClaw proactively suggests improvements
+- Maya proactively suggests improvements
 
 ### Day 30-60 — Growth Phase
 - 50-80 members, experimenting with vouchers and referrals
 - Approaching 100 members (free tier limit)
-- NemoClaw mentions billing page in sidebar when relevant
+- Maya mentions billing page in sidebar when relevant
 
 ### Day 60+ — Established Program
 - 100+ members, subscribed or marketing features blocked
@@ -719,10 +719,10 @@ Level 5:  Platinum (2,500 pts)     Level 10: Mythic   (100,000 pts)
 
 ---
 
-## NemoClaw AI System Prompt (Draft)
+## Maya AI System Prompt (Draft)
 
 ```
-You are NemoClaw, the AI assistant for Boutikio loyalty program management.
+You are Maya, the AI assistant for Boutikio loyalty program management.
 
 IDENTITY:
 - You help partners manage their loyalty programs through conversation
@@ -778,7 +778,7 @@ LIMITATIONS:
 Partner -> Open WebUI -> Boutikio Auth -> JWT Session
                                             |
                                             v
-                              Open WebUI -> Alibaba Cloud DashScope API (NemoClaw)
+                              Open WebUI -> Alibaba Cloud DashScope API (Maya)
                                             |
                                             v
                               Qwen3.5-Plus -> tool_call -> OpenClaw
@@ -815,13 +815,13 @@ Partner -> Open WebUI -> Boutikio Auth -> JWT Session
 ### Phase 1: Chat Alongside Dashboard (Month 1-3)
 - Open WebUI deployed with embedded pages
 - Partners can use either interface
-- NemoClaw handles: onboarding, vouchers, rewards, analytics
+- Maya handles: onboarding, vouchers, rewards, analytics
 - Embedded pages handle: billing, settings, receipt config, card preview
 
 ### Phase 2: Chat-Primary (Month 3-6)
 - Most daily operations happen via chat
 - Dashboard becomes "legacy" mode
-- NemoClaw handles: campaigns, member management, social sharing
+- Maya handles: campaigns, member management, social sharing
 - Embedded pages mature (Option A iframes -> Option B plugins)
 
 ### Phase 3: Chat-Only (Month 6-12)
@@ -842,7 +842,7 @@ Partner -> Open WebUI -> Boutikio Auth -> JWT Session
 ### Phase 1: Foundation (Week 1-2)
 - [ ] Deploy Open WebUI (Docker, self-hosted)
 - [ ] Configure Alibaba Cloud DashScope API connection (Qwen3.5-Plus)
-- [ ] Set up NemoClaw system prompt
+- [ ] Set up Maya system prompt
 - [ ] Implement Open WebUI <-> Boutikio auth bridge (JWT)
 - [ ] Basic OpenClaw tool execution framework
 - [ ] Partner scoping and permission checks
@@ -888,9 +888,9 @@ Partner -> Open WebUI -> Boutikio Auth -> JWT Session
 
 ## Open Questions
 
-1. **Conversation Memory** — Should NemoClaw remember context across sessions? Open WebUI stores history, but should the AI reference past conversations?
+1. **Conversation Memory** — Should Maya remember context across sessions? Open WebUI stores history, but should the AI reference past conversations?
 
-2. **Proactive Messages** — Should NemoClaw send proactive alerts? ("Your voucher is 90% redeemed") Requires background jobs pushing to Open WebUI.
+2. **Proactive Messages** — Should Maya send proactive alerts? ("Your voucher is 90% redeemed") Requires background jobs pushing to Open WebUI.
 
 3. **Multi-Partner Accounts** — Can one login manage multiple stores? (Franchise owners) Open WebUI supports workspaces — could map to partner accounts.
 
@@ -898,9 +898,9 @@ Partner -> Open WebUI -> Boutikio Auth -> JWT Session
 
 5. **Offline/Fallback** — What if Alibaba Cloud DashScope is down? Fallback LLM provider? Graceful degradation?
 
-6. **Voice Input** — Open WebUI supports voice. Should we optimize NemoClaw for voice conversations?
+6. **Voice Input** — Open WebUI supports voice. Should we optimize Maya for voice conversations?
 
-7. **Charts in Chat** — Should NemoClaw render charts inline? Open WebUI supports markdown. Could generate ASCII charts or link to visual dashboard.
+7. **Charts in Chat** — Should Maya render charts inline? Open WebUI supports markdown. Could generate ASCII charts or link to visual dashboard.
 
 8. **Onboarding Completion Tracking** — How do we track if partners finish onboarding? Follow up if they abandon mid-setup?
 
@@ -914,7 +914,7 @@ Partner -> Open WebUI -> Boutikio Auth -> JWT Session
 
 - [ ] Evaluate Open WebUI deployment options (Docker)
 - [ ] Test Alibaba Cloud DashScope API with Qwen3.5-Plus function calling
-- [ ] Draft NemoClaw system prompt v2 with more examples
+- [ ] Draft Maya system prompt v2 with more examples
 - [ ] Design the auth bridge (Open WebUI <-> Boutikio JWT)
 - [ ] Prototype embedded Billing page (iframe in Open WebUI)
 - [ ] Prototype first 3 OpenClaw tools
@@ -1140,8 +1140,8 @@ In Open WebUI admin panel:
 1. Go to Settings → Connections
 2. Add OpenAI-compatible connection pointing to DashScope
 3. Select `qwen3.5-plus` as default model
-4. Set NemoClaw system prompt (from the draft in this doc)
-5. Test: "Hello, who are you?" → should respond as NemoClaw
+4. Set Maya system prompt (from the draft in this doc)
+5. Test: "Hello, who are you?" → should respond as Maya
 
 ### Step 3: Configure Boutikio as OAuth Provider (Day 3-7)
 
@@ -1197,7 +1197,7 @@ Each tool call:
 
 Register in Open WebUI admin panel as OpenAPI tool server.
 
-**Test:** In chat, say "How many members do I have?" → NemoClaw calls `get_dashboard_stats` → OpenClaw executes → returns data.
+**Test:** In chat, say "How many members do I have?" → Maya calls `get_dashboard_stats` → OpenClaw executes → returns data.
 
 ### Step 5: Build Embedded Pages (Day 14-21)
 
@@ -1214,7 +1214,7 @@ resources/views/embedded/
   billing.blade.php          → Stripe elements, plan selector, invoices
   settings.blade.php         → Profile form, password, notifications
   card-preview.blade.php     → Live card mockup, QR code download
-  audit-log.blade.php        → Filterable table of NemoClaw actions
+  audit-log.blade.php        → Filterable table of Maya actions
   receipt-settings.blade.php → OCR config, template rules
   member-directory.blade.php → Searchable member table
 
@@ -1270,18 +1270,18 @@ window.addEventListener('message', (e) => {
 - Replace Open WebUI logo with Boutikio logo
 - Set favicon, PWA manifest name/icons
 - Hide unnecessary Open WebUI features (community sharing, model selector for non-admins)
-- Set default model to NemoClaw (Qwen3.5-Plus)
+- Set default model to Maya (Qwen3.5-Plus)
 - Configure welcome message for new partners (onboarding trigger)
 
 ### Step 7: Test End-to-End (Day 23-28)
 
 1. New partner signs up on Boutikio → redirected to Open WebUI
-2. NemoClaw starts onboarding conversation
+2. Maya starts onboarding conversation
 3. Partner sets up store, uploads logo (vision evaluates quality)
 4. Partner creates rewards and vouchers via chat
 5. Partner checks billing page in sidebar
 6. Partner views card preview, downloads QR code
-7. Partner checks audit log of all NemoClaw actions
+7. Partner checks audit log of all Maya actions
 8. Partner hits 100 members → marketing tools blocked → billing nudge
 9. Partner subscribes → marketing tools unlocked
 10. Dark/light mode toggle → all pages sync theme
@@ -1303,7 +1303,7 @@ This document covers the full vision, architecture, and implementation plan. Her
 
 **What we'll figure out as we build:**
 - Exact Open WebUI fork changes (sidebar component specifics)
-- NemoClaw system prompt refinement (needs real conversation testing)
+- Maya system prompt refinement (needs real conversation testing)
 - Edge cases in tool execution (error handling, timeouts)
 - Theme sync pixel-perfect matching (CSS variable mapping)
 - Performance tuning (DashScope latency, OpenClaw response times)

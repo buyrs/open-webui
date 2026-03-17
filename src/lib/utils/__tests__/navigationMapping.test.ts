@@ -3,8 +3,11 @@
  * Feature: openclaw-openwebui-integration, Property 1
  * Validates: Requirements 5.1, 6.1
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import fc from 'fast-check';
+
+// Mock import.meta.env before importing the config module
+vi.stubGlobal('import', { meta: { env: {} } });
 
 /**
  * Navigation item interface matching Sidebar.svelte boutikioNavItems
@@ -24,6 +27,8 @@ interface RouteConfig {
 	title: string;
 }
 
+const BOUTIKIO_BASE_URL = 'https://app.boutikio.com';
+
 /**
  * The canonical navigation configuration from Sidebar.svelte
  */
@@ -37,15 +42,16 @@ const boutikioNavItems: NavItem[] = [
 ];
 
 /**
- * The canonical route configuration from embedded page routes
+ * The canonical route configuration from embedded page routes.
+ * Uses the same embeddedUrl() pattern as the actual route files.
  */
 const routeConfigs: RouteConfig[] = [
-	{ route: '/billing', iframeSrc: 'https://app.boutikio.com/embedded/billing', title: 'Billing & Subscription' },
-	{ route: '/partner-settings', iframeSrc: 'https://app.boutikio.com/embedded/settings', title: 'Account Settings' },
-	{ route: '/receipt-settings', iframeSrc: 'https://app.boutikio.com/embedded/receipt-settings', title: 'Receipt Settings' },
-	{ route: '/card-preview', iframeSrc: 'https://app.boutikio.com/embedded/card-preview', title: 'Card Preview' },
-	{ route: '/audit-log', iframeSrc: 'https://app.boutikio.com/embedded/audit-log', title: 'Audit Log' },
-	{ route: '/members', iframeSrc: 'https://app.boutikio.com/embedded/members', title: 'Members' }
+	{ route: '/billing', iframeSrc: `${BOUTIKIO_BASE_URL}/embedded/billing`, title: 'Billing & Subscription' },
+	{ route: '/partner-settings', iframeSrc: `${BOUTIKIO_BASE_URL}/embedded/settings`, title: 'Account Settings' },
+	{ route: '/receipt-settings', iframeSrc: `${BOUTIKIO_BASE_URL}/embedded/receipt-settings`, title: 'Receipt Settings' },
+	{ route: '/card-preview', iframeSrc: `${BOUTIKIO_BASE_URL}/embedded/card-preview`, title: 'Card Preview' },
+	{ route: '/audit-log', iframeSrc: `${BOUTIKIO_BASE_URL}/embedded/audit-log`, title: 'Audit Log' },
+	{ route: '/members', iframeSrc: `${BOUTIKIO_BASE_URL}/embedded/members`, title: 'Members' }
 ];
 
 describe('Navigation-to-iframe Mapping', () => {
@@ -58,23 +64,20 @@ describe('Navigation-to-iframe Mapping', () => {
 		it('should map every nav item href to a valid route with correct iframe src', () => {
 			fc.assert(
 				fc.property(
-					// Generate random indices to select nav items
 					fc.array(fc.integer({ min: 0, max: boutikioNavItems.length - 1 }), { minLength: 1 }),
 					(indices) => {
-						// Deduplicate indices
 						const uniqueIndices = [...new Set(indices)];
 
 						for (const idx of uniqueIndices) {
 							const item = boutikioNavItems[idx];
 
-							// Find matching route config
 							const routeConfig = routeConfigs.find(r => r.route === item.href);
 							expect(routeConfig).toBeDefined();
 
 							// Verify iframe src follows the pattern
-							expect(routeConfig!.iframeSrc).toMatch(/^https:\/\/app\.boutikio\.com\/embedded\/.+$/);
+							expect(routeConfig!.iframeSrc).toMatch(new RegExp(`^${BOUTIKIO_BASE_URL.replace(/\./g, '\\.')}/embedded/.+$`));
 
-							// Extract slug from href (e.g., '/billing' -> 'billing')
+							// Extract slug from href
 							const slug = item.href.replace(/^\//, '');
 							expect(routeConfig!.iframeSrc).toContain(`/embedded/${slug === 'partner-settings' ? 'settings' : slug}`);
 						}
@@ -88,30 +91,24 @@ describe('Navigation-to-iframe Mapping', () => {
 		it('should have unique hrefs in the canonical navigation config', () => {
 			const hrefs = boutikioNavItems.map(item => item.href);
 			const uniqueHrefs = new Set(hrefs);
-
-			// All hrefs should be unique
 			expect(uniqueHrefs.size).toBe(hrefs.length);
 		});
 
 		it('should have unique iframe srcs in the canonical route configs', () => {
 			const srcs = routeConfigs.map(r => r.iframeSrc);
 			const uniqueSrcs = new Set(srcs);
-
-			// All iframe srcs should be unique
 			expect(uniqueSrcs.size).toBe(srcs.length);
 		});
 
 		it('should have all nav items matched to route configs', () => {
-			// Every navigation item should have a corresponding route config
 			for (const navItem of boutikioNavItems) {
 				const matchingRoute = routeConfigs.find(r => r.route === navItem.href);
 				expect(matchingRoute).toBeDefined();
-				expect(matchingRoute!.iframeSrc).toMatch(/^https:\/\/app\.boutikio\.com\/embedded\//);
+				expect(matchingRoute!.iframeSrc).toMatch(new RegExp(`^${BOUTIKIO_BASE_URL.replace(/\./g, '\\.')}/embedded/`));
 			}
 		});
 
 		it('should have all route configs matched to nav items', () => {
-			// Every route config should have a corresponding nav item
 			for (const routeConfig of routeConfigs) {
 				const matchingNav = boutikioNavItems.find(n => n.href === routeConfig.route);
 				expect(matchingNav).toBeDefined();
@@ -127,15 +124,10 @@ describe('Navigation-to-iframe Mapping', () => {
 		it('should generate valid Boutikio embedded URLs for any slug', () => {
 			fc.assert(
 				fc.property(
-					// Generate valid URL slugs (lowercase alphanumeric, dashes)
 					fc.stringMatching(/^[a-z][a-z0-9-]{0,20}$/),
 					(slug) => {
-						const embeddedUrl = `https://app.boutikio.com/embedded/${slug}`;
+						const embeddedUrl = `${BOUTIKIO_BASE_URL}/embedded/${slug}`;
 
-						// Verify URL structure
-						expect(embeddedUrl).toMatch(/^https:\/\/app\.boutikio\.com\/embedded\/[a-z][a-z0-9-]*$/);
-
-						// Verify it's a valid URL
 						const parsed = new URL(embeddedUrl);
 						expect(parsed.protocol).toBe('https:');
 						expect(parsed.hostname).toBe('app.boutikio.com');

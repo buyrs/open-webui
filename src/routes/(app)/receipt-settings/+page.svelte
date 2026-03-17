@@ -1,15 +1,15 @@
-<script>
+<script lang="ts">
 	import EmbeddedPage from '$lib/components/embedded/EmbeddedPage.svelte';
 	import SEO from '$lib/components/SEO.svelte';
+	import { page } from '$app/stores';
+	import { embeddedUrl, parseLanguage } from '$lib/config/boutikio';
+
+	$: lang = parseLanguage($page.url.searchParams.get('lang'));
 </script>
 
-<SEO
-	title="Receipt Settings"
-	description="Customize receipt templates, add your branding, and configure receipt delivery options for your loyalty program."
-	keywords="receipt settings, receipt templates, branding, receipt delivery, loyalty receipts"
-/>
+<SEO page="receipt" {lang} />
 
 <EmbeddedPage
-	src="https://app.boutikio.com/embedded/receipt-settings"
+	src={embeddedUrl('receipt-settings')}
 	title="Receipt Settings"
 />

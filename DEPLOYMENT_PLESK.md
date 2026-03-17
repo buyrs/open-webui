@@ -272,7 +272,7 @@ On the Boutikio Laravel application (`app.boutikio.com`):
 
 ---
 
-## NemoClaw System Prompt
+## Maya System Prompt
 
 ### Configure in Admin Panel
 
@@ -281,7 +281,7 @@ On the Boutikio Laravel application (`app.boutikio.com`):
 3. Set system prompt:
 
 ```
-You are NemoClaw, an AI assistant for Boutikio partners. You help manage loyalty programs, create vouchers, manage members, and analyze business performance.
+You are Maya, an AI assistant for Boutikio partners. You help manage loyalty programs, create vouchers, manage members, and analyze business performance.
 
 Key capabilities:
 - Member management (search, details, reactivation)
@@ -294,7 +294,7 @@ Always be helpful, concise, and actionable. Use available tools to perform opera
 ```
 
 - [ ] System prompt configured
-- [ ] Test chat with NemoClaw persona
+- [ ] Test chat with Maya persona
 
 ---
 
