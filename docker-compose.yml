@@ -1,0 +1,33 @@
+services:
+  open-webui:
+    build: .
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui-data:/app/backend/data
+    environment:
+      # General
+      - WEBUI_URL=https://chat.boutikio.com
+      - WEBUI_NAME=Boutikio
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+
+      # OAuth Configuration
+      - ENABLE_OAUTH_SIGNUP=true
+      - ENABLE_LOGIN_FORM=false
+      - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
+      - ENABLE_OAUTH_TOKEN_EXCHANGE=true
+      - OAUTH_PROVIDERS=${OAUTH_PROVIDERS_JSON}
+
+      # LLM Configuration (Alibaba Cloud DashScope)
+      - OPENAI_API_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      - OPENAI_API_KEY=${DASHSCOPE_API_KEY}
+      - DEFAULT_MODELS=qwen3.5-plus
+
+      # Feature Flags
+      - SHOW_ADMIN_DETAILS=false
+      - ENABLE_COMMUNITY_SHARING=false
+      - ENABLE_MESSAGE_RATING=false
+    restart: unless-stopped
+
+volumes:
+  open-webui-data:

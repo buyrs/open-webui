@@ -22,6 +22,8 @@ The design philosophy is "additive, not rewrite" — we add new SvelteKit routes
 - #[[file:docs/ai-agent/openclaw-laravel.md]]
 - #[[file:docs/ai-agent/openclaw-mcp-architecture.md]]
 - #[[file:.kiro/specs/openclaw-openwebui-integration/requirements.md]]
+- #[[file:.kiro/specs/openclaw-openwebui-integration/palette.md]] — Full color palette with hex values and CSS variables
+- #[[file:.kiro/specs/openclaw-openwebui-integration/tools.md]] — Complete tool registry with PHP definitions
 
 ## Architecture
 
@@ -287,6 +289,173 @@ volumes:
 ```
 
 **Satisfies:** Requirements 1, 2, 3, 7
+
+---
+
+## Theme & Color Palette
+
+The Boutikio brand colors are used for consistent theming across the Open WebUI shell and embedded pages. These values are synchronized to embedded iframes via the theme-sync postMessage protocol.
+
+### Primary Colors (Orange)
+
+| Shade | Hex | Usage |
+|-------|-----|-------|
+| 50 | `#fff7ed` | Lightest background |
+| 100 | `#ffedd5` | Light background |
+| 200 | `#fed7aa` | Subtle highlights |
+| 300 | `#fdba74` | Borders, light accents |
+| 400 | `#fb923c` | Interactive elements |
+| 500 | `#f97316` | Standard primary |
+| 600 | `#C2420D` | **Brand Primary** |
+| 700 | `#9a3412` | Buttons, active states |
+| 800 | `#7c2d12` | Hover states |
+| 900 | `#431407` | Darkest, text |
+
+### Secondary Colors (Blue)
+
+| Shade | Hex | Usage |
+|-------|-----|-------|
+| 50 | `#eff6ff` | Lightest background |
+| 100 | `#dbeafe` | Light background |
+| 200 | `#bfdbfe` | Subtle highlights |
+| 300 | `#93c5fd` | Borders, light accents |
+| 400 | `#60a5fa` | Interactive elements |
+| 500 | `#3b82f6` | Standard secondary |
+| 600 | `#2563eb` | Buttons, links |
+| 700 | `#1d4ed8` | **Secondary buttons** |
+| 800 | `#1e40af` | Hover states |
+| 900 | `#1e3a8a` | Darkest, text |
+
+### Semantic Colors
+
+| Color | Shades | Usage |
+|-------|--------|-------|
+| Success | `#dcfce7`, `#bbf7d0`, `#15803d`, `#166534` | Alert success messages, positive states |
+| Warning | `#fcd34d`, `#facc15`, `#eab308`, `#a16207` | Warning alerts, caution states |
+| Danger | `#fef2f2`, `#fca5a5`, `#ef4444`, `#dc2626`, `#991b1b` | Error messages, destructive actions |
+| Info | `#dbeafe`, `#bfdbfe`, `#3b82f6`, `#1d4ed8`, `#1e40af` | Informational alerts |
+
+### CSS Variables for Theme Sync
+
+These variables are sent to embedded iframes via postMessage:
+
+```css
+:root {
+  /* Primary (Orange) */
+  --primary-600: #C2420D;
+  --primary-700: #9a3412;
+  --primary-800: #7c2d12;
+
+  /* Secondary (Blue) */
+  --secondary-500: #3b82f6;
+  --secondary-700: #1d4ed8;
+  --secondary-800: #1e40af;
+
+  /* Semantic */
+  --success: #16a34a;
+  --warning: #eab308;
+  --danger: #dc2626;
+  --info: #3b82f6;
+
+  /* Neutrals */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-500: #6b7280;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+}
+```
+
+### Dark Mode Mappings
+
+| Light Mode | Dark Mode |
+|------------|-----------|
+| `bg-white` | `dark:bg-gray-700` / `dark:bg-gray-800` |
+| `bg-gray-50` | `dark:bg-gray-700` |
+| `text-gray-900` | `dark:text-white` |
+| `text-gray-500` | `dark:text-gray-400` |
+| `border-gray-200` | `dark:border-gray-600` |
+
+### Typography
+
+| Font | Usage |
+|------|-------|
+| **Geist** | Primary body font |
+| **Inter** | Fallback body font |
+| **JetBrains Mono** | Monospace/code |
+
+---
+
+## OpenClaw Tool Reference
+
+NemoClaw can invoke 42 tools through the OpenClaw API. These tools are auto-discovered from the OpenAPI spec at `https://app.boutikio.com/openclaw/openapi.json`.
+
+### Tool Categories
+
+| Category | Tools | Gated | Description |
+|----------|-------|-------|-------------|
+| **Onboarding** | 4 | 0 | Partner profile setup, card customization, QR generation |
+| **Voucher** | 6 | 5 | Create, pause, resume vouchers; batch creation; social sharing |
+| **Campaign** | 4 | 3 | Marketing campaign management and performance |
+| **Member** | 6 | 2 | Member listing, details, reactivation, PIN codes, segments |
+| **Reward** | 5 | 0 | Reward CRUD and statistics |
+| **Referral** | 3 | 2 | Referral campaigns and statistics |
+| **Analytics** | 4 | 0 | Dashboard stats, retention, revenue, top members |
+| **Wallet** | 4 | 0 | Apple/Google Wallet pass updates and notifications |
+| **Gamification** | 4 | 0 | Achievements, point multipliers, progress, leaderboards |
+| **Geofencing** | 2 | 0 | Location-based notification triggers |
+
+### Key Tools for NemoClaw
+
+**Onboarding Flow:**
+- `create_partner_profile` — Create store details (name, address, phone, website)
+- `update_card` — Customize loyalty card design (logo, banner, colors)
+- `generate_qr_code` — Generate enrollment QR code
+- `get_onboarding_status` — Check setup completion
+
+**Member Management:**
+- `get_members` — List members with filters (segment, status)
+- `get_member_details` — Get full member profile
+- `reactivate_member` — Re-engage inactive members with incentive points
+- `get_member_segments` — Get available segments (e.g., "at-risk", "VIP")
+
+**Voucher & Campaign:**
+- `create_voucher` / `create_voucher_batch` — Create discount or bonus point vouchers
+- `pause_voucher` / `resume_voucher` — Toggle voucher availability
+- `create_campaign` — Launch marketing campaigns (promotion, retention, acquisition)
+- `share_voucher_social` — Generate Facebook/Instagram/Twitter content
+
+**Analytics:**
+- `get_dashboard_stats` — Key KPIs (members, points, redemptions)
+- `get_retention_metrics` — Cohort analysis, churn rates
+- `get_revenue_report` — Revenue attribution
+- `get_top_members` — Highest point earners
+
+**Wallet & Engagement:**
+- `send_wallet_notification` — Push notification to member's Apple/Google Wallet
+- `send_banner_notification` — Banner to all members with a card
+- `apply_point_multiplier` — Double/triple points events
+- `unlock_achievement` — Award gamification achievements
+
+### Subscription Gating
+
+| Category | Gated? | Notes |
+|----------|--------|-------|
+| All `get_*` tools | ❌ No | Always accessible |
+| `update_card` | ❌ No | Onboarding essential |
+| Reward CRUD | ❌ No | Core functionality |
+| Wallet reads | ❌ No | Read-only |
+| Gamification reads | ❌ No | Read-only |
+| All voucher tools | ✅ Yes | Marketing feature |
+| All campaign tools | ✅ Yes | Marketing feature |
+| `send_pin_code` / `bulk_send_pin_codes` | ✅ Yes | Marketing feature |
+| `create_referral_campaign` / `greet_referral` | ✅ Yes | Marketing feature |
+
+**Free tier limit:** 100 active members (configurable via `OPENCLAW_FREE_MEMBER_LIMIT`)
+
+When a gated tool is blocked, NemoClaw receives an error response and gracefully explains the subscription requirement, pointing partners to the Billing page in the sidebar.
 
 ---
 

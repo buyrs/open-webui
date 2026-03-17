@@ -1,2 +1,15 @@
+# Robots.txt for Boutikio AI
+# https://chat.boutikio.com
+
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /oauth/
+Disallow: /workspace/
+
+# Sitemap
+Sitemap: https://chat.boutikio.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1

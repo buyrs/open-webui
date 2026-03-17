@@ -3,6 +3,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import {
 		user,
 		chats,
@@ -88,6 +89,16 @@
 	let showPinnedModels = false;
 	let showChannels = false;
 	let showFolders = false;
+
+	// Boutikio navigation items for partner-facing sidebar
+	const boutikioNavItems = [
+		{ icon: '💳', label: 'Billing', href: '/billing' },
+		{ icon: '⚙️', label: 'Settings', href: '/partner-settings' },
+		{ icon: '🧾', label: 'Receipt Settings', href: '/receipt-settings' },
+		{ icon: '🎴', label: 'Card Preview', href: '/card-preview' },
+		{ icon: '📋', label: 'Audit Log', href: '/audit-log' },
+		{ icon: '👥', label: 'Members', href: '/members' }
+	];
 
 	let folders = {};
 	let folderRegistry = {};
@@ -1047,6 +1058,29 @@
 							</a>
 						</div>
 					{/if}
+				</div>
+
+				<!-- Boutikio Navigation Section -->
+				<div class="px-2 mt-2 mb-2">
+					<div class="border-t border-gray-200/50 dark:border-gray-800/50 pt-2 mb-1">
+						<div class="px-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+							Boutikio
+						</div>
+					</div>
+					{#each boutikioNavItems as item}
+						<a
+							class="flex items-center space-x-3 rounded-xl px-2.5 py-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition { $page.url.pathname === item.href ? 'bg-gray-100 dark:bg-gray-900' : '' }"
+							href={item.href}
+							on:click={itemClickHandler}
+							draggable="false"
+							aria-label={item.label}
+						>
+							<div class="self-center text-base">{item.icon}</div>
+							<div class="flex self-center translate-y-[0.5px]">
+								<div class="self-center text-sm font-primary">{item.label}</div>
+							</div>
+						</a>
+					{/each}
 				</div>
 
 				{#if ($models ?? []).length > 0 && (($settings?.pinnedModels ?? []).length > 0 || $config?.default_pinned_models)}

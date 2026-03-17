@@ -19,6 +19,8 @@
 - #[[file:docs/ai-agent/openclaw.md]]
 - #[[file:docs/ai-agent/openclaw-laravel.md]]
 - #[[file:docs/ai-agent/openclaw-mcp-architecture.md]]
+- #[[file:.kiro/specs/openclaw-openwebui-integration/palette.md]] — Boutikio color palette
+- #[[file:.kiro/specs/openclaw-openwebui-integration/tools.md]] — OpenClaw tool registry
 
 ---
 
@@ -80,6 +82,9 @@
 4. WHEN OpenClaw returns a tool result, THEN Open WebUI SHALL send the result back to Qwen3.5-Plus for the model to format a natural language response.
 5. IF OpenClaw returns an error or a subscription-gated response, THEN Open WebUI SHALL pass that response to Qwen3.5-Plus so NemoClaw can communicate it to the partner gracefully.
 
+### Reference
+- See [tools.md](tools.md) for the complete tool registry with 42 tools across 10 categories and subscription gating rules.
+
 ---
 
 ## Requirement 5: Custom Sidebar Navigation
@@ -120,12 +125,15 @@
 ### Acceptance Criteria
 1. The Open WebUI fork SHALL replace the default logo with `static/boutikio-logo.svg` displayed in the sidebar.
 2. The Open WebUI fork SHALL replace the default favicon with `static/boutikio-favicon.ico`.
-3. The `static/manifest.json` SHALL be updated with `name: Boutikio`, `short_name: Boutikio`, `description: Manage your loyalty program with AI`, `theme_color: #3b82f6`, and PWA icons at 192x192 and 512x512 sizes.
+3. The `static/manifest.json` SHALL be updated with `name: Boutikio`, `short_name: Boutikio`, `description: Manage your loyalty program with AI`, `theme_color: #3b82f6` (secondary-500), and PWA icons at 192x192 and 512x512 sizes.
 4. The Open WebUI instance SHALL set `SHOW_ADMIN_DETAILS` to `false`.
 5. The Open WebUI instance SHALL set `ENABLE_COMMUNITY_SHARING` to `false`.
 6. The Open WebUI instance SHALL set `ENABLE_MESSAGE_RATING` to `false`.
 7. The model selector dropdown SHALL be hidden for non-admin users so that partners only interact with the default NemoClaw model.
 8. Any "Powered by Open WebUI" branding SHALL be removed or hidden in the fork.
+
+### Reference
+- See [palette.md](palette.md) for the complete Boutikio color palette with primary (orange), secondary (blue), and semantic colors.
 
 ---
 
