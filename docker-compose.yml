@@ -33,6 +33,18 @@ services:
       - SHOW_ADMIN_DETAILS=false
       - ENABLE_COMMUNITY_SHARING=false
       - ENABLE_MESSAGE_RATING=false
+
+      # Disable features not needed for partners
+      - ENABLE_NOTES=false
+      - ENABLE_CHANNELS=false
+      - ENABLE_FOLDERS=false
+
+      # Disable workspace access for non-admin users (partners)
+      - USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS=false
+      - USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS=false
+      - USER_PERMISSIONS_WORKSPACE_PROMPTS_ACCESS=false
+      - USER_PERMISSIONS_WORKSPACE_TOOLS_ACCESS=false
+      - USER_PERMISSIONS_WORKSPACE_SKILLS_ACCESS=false
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s

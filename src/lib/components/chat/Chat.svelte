@@ -2713,6 +2713,7 @@
 						title={$chatTitle}
 						bind:selectedModels
 						shareEnabled={!!history.currentId}
+						showModelSelector={$user?.role === 'admin'}
 						{initNewChat}
 						{archiveChatHandler}
 						{moveChatHandler}
