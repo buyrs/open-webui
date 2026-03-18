@@ -35,15 +35,15 @@ This checklist covers deploying the Boutikio-customized Open WebUI fork to a Ple
 - [ ] In Plesk, go to **SSL/TLS Certificates** for `boutikio.com`
 - [ ] Select **Let's Encrypt** with wildcard option
 - [ ] Add DNS TXT record for validation
-- [ ] Covers: `chat.boutikio.com`, `app.boutikio.com`, and future subdomains
+- [ ] Covers: `chat.boutikio.com`, `web.boutikio.com`, and future subdomains
 - [ ] More complex setup but centralized management
 
 > **Note**: Each subdomain can have its own Let's Encrypt certificate. There's no requirement to share certificates between `boutikio.com` and `chat.boutikio.com`.
 
 ### External Services
-- [ ] Boutikio OAuth provider configured at `app.boutikio.com`
+- [ ] Boutikio OAuth provider configured at `web.boutikio.com`
 - [ ] Alibaba Cloud DashScope API key obtained
-- [ ] OpenClaw API accessible at `app.boutikio.com/openclaw`
+- [ ] OpenClaw API accessible at `web.boutikio.com/openclaw`
 
 ---
 
@@ -201,7 +201,7 @@ WEBUI_SECRET_KEY=<generate-secure-random-string>
 BOUTIKIO_OAUTH_SECRET=<oauth-client-secret>
 DASHSCOPE_API_KEY=<alibaba-cloud-api-key>
 
-OAUTH_PROVIDERS_JSON={"boutikio":{"client_id":"open-webui","client_secret":"${BOUTIKIO_OAUTH_SECRET}","server_url":"https://app.boutikio.com","scope":"openid profile email partner","redirect_uri":"https://chat.boutikio.com/oauth/callback","provider_name":"Boutikio","icon_url":"/static/boutikio-logo.svg"}}
+OAUTH_PROVIDERS_JSON={"boutikio":{"client_id":"open-webui","client_secret":"${BOUTIKIO_OAUTH_SECRET}","server_url":"https://web.boutikio.com","scope":"openid profile email partner","redirect_uri":"https://chat.boutikio.com/oauth/callback","provider_name":"Boutikio","icon_url":"/static/boutikio-logo.svg"}}
 ```
 
 - [ ] Create `.env` file from template
@@ -217,7 +217,7 @@ OAUTH_PROVIDERS_JSON={"boutikio":{"client_id":"open-webui","client_secret":"${BO
 
 ### Boutikio OAuth Provider Setup
 
-On the Boutikio Laravel application (`app.boutikio.com`):
+On the Boutikio Laravel application (`web.boutikio.com`):
 
 - [ ] Create OAuth client with:
   - **Client ID**: `open-webui`
@@ -227,7 +227,7 @@ On the Boutikio Laravel application (`app.boutikio.com`):
 
 ### Verify OAuth Flow
 
-- [ ] Test login redirect to `app.boutikio.com/oauth/authorize`
+- [ ] Test login redirect to `web.boutikio.com/oauth/authorize`
 - [ ] Verify callback URL receives authorization code
 - [ ] Confirm user is created in Open WebUI
 - [ ] Test token exchange for tool server calls
@@ -261,7 +261,7 @@ On the Boutikio Laravel application (`app.boutikio.com`):
 3. Add OpenAPI tool server:
 
 - [ ] **Name**: OpenClaw
-- [ ] **URL**: `https://app.boutikio.com/openclaw/openapi.json`
+- [ ] **URL**: `https://web.boutikio.com/openclaw/openapi.json`
 - [ ] **Auth Type**: System OAuth (uses partner's token)
 - [ ] Enable tool server
 
@@ -434,7 +434,7 @@ pm2 status
 tail -f /var/log/nginx/error.log
 
 # Test OAuth manually
-curl -I https://app.boutikio.com/oauth/authorize?client_id=open-webui
+curl -I https://web.boutikio.com/oauth/authorize?client_id=open-webui
 ```
 
 ---

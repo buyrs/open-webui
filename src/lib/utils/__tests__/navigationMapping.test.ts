@@ -27,7 +27,7 @@ interface RouteConfig {
 	title: string;
 }
 
-const BOUTIKIO_BASE_URL = 'https://app.boutikio.com';
+const BOUTIKIO_BASE_URL = 'https://web.boutikio.com';
 
 /**
  * The canonical navigation configuration from Sidebar.svelte
@@ -130,7 +130,7 @@ describe('Navigation-to-iframe Mapping', () => {
 
 						const parsed = new URL(embeddedUrl);
 						expect(parsed.protocol).toBe('https:');
-						expect(parsed.hostname).toBe('app.boutikio.com');
+						expect(parsed.hostname).toBe('web.boutikio.com');
 						expect(parsed.pathname).toBe(`/embedded/${slug}`);
 
 						return true;

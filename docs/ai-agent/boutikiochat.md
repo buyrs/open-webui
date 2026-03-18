@@ -1025,7 +1025,7 @@ System: ┌─ Résumé ──────────────────�
 Partner: *taps Créer*
 
 System: ✅ 100 bons créés avec succès!
-        Lien de partage: https://app.boutikio.com/v/ABC123
+        Lien de partage: https://web.boutikio.com/v/ABC123
         [📤 Copier le lien] [📱 Partager]
 ```
 

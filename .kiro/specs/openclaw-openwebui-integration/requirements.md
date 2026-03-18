@@ -64,8 +64,8 @@
 1. The Open WebUI instance SHALL set `ENABLE_OAUTH_SIGNUP` to `true`.
 2. The Open WebUI instance SHALL set `ENABLE_LOGIN_FORM` to `false` so that the email/password form is hidden.
 3. The Open WebUI instance SHALL set `OAUTH_MERGE_ACCOUNTS_BY_EMAIL` to `true`.
-4. The `OAUTH_PROVIDERS` environment variable SHALL configure a `boutikio` provider with `client_id: open-webui`, `server_url: https://app.boutikio.com`, `scope: openid profile email partner`, `redirect_uri: https://chat.boutikio.com/oauth/callback`, `provider_name: Boutikio`, `icon_url: /static/boutikio-logo.svg`.
-5. WHEN a partner clicks "Login with Boutikio", THEN Open WebUI SHALL redirect to `https://app.boutikio.com/oauth/authorize`, and upon successful authentication, SHALL redirect back and create/update a local user from the ID token claims.
+4. The `OAUTH_PROVIDERS` environment variable SHALL configure a `boutikio` provider with `client_id: open-webui`, `server_url: https://web.boutikio.com`, `scope: openid profile email partner`, `redirect_uri: https://chat.boutikio.com/oauth/callback`, `provider_name: Boutikio`, `icon_url: /static/boutikio-logo.svg`.
+5. WHEN a partner clicks "Login with Boutikio", THEN Open WebUI SHALL redirect to `https://web.boutikio.com/oauth/authorize`, and upon successful authentication, SHALL redirect back and create/update a local user from the ID token claims.
 6. The Open WebUI instance SHALL set `ENABLE_OAUTH_TOKEN_EXCHANGE` to `true` so that the partner's Boutikio access token is passed to tool servers on every tool call.
 
 ---
@@ -76,9 +76,9 @@
 - As a partner, I want Maya to execute actions on my behalf (create vouchers, check analytics, etc.) so that I can manage my loyalty program through chat.
 
 ### Acceptance Criteria
-1. The OpenClaw tool server SHALL be registered in Open WebUI's admin panel with Name: `OpenClaw`, URL: `https://app.boutikio.com/openclaw/openapi.json`, Auth type: `system_oauth`.
+1. The OpenClaw tool server SHALL be registered in Open WebUI's admin panel with Name: `OpenClaw`, URL: `https://web.boutikio.com/openclaw/openapi.json`, Auth type: `system_oauth`.
 2. Open WebUI SHALL auto-discover all available tools from the OpenClaw OpenAPI specification.
-3. WHEN Qwen3.5-Plus returns a tool_call response, THEN Open WebUI SHALL execute a POST request to `https://app.boutikio.com/openclaw/tools/{toolName}` with the partner's Boutikio OAuth token in the `Authorization: Bearer` header.
+3. WHEN Qwen3.5-Plus returns a tool_call response, THEN Open WebUI SHALL execute a POST request to `https://web.boutikio.com/openclaw/tools/{toolName}` with the partner's Boutikio OAuth token in the `Authorization: Bearer` header.
 4. WHEN OpenClaw returns a tool result, THEN Open WebUI SHALL send the result back to Qwen3.5-Plus for the model to format a natural language response.
 5. IF OpenClaw returns an error or a subscription-gated response, THEN Open WebUI SHALL pass that response to Qwen3.5-Plus so Maya can communicate it to the partner gracefully.
 

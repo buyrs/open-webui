@@ -140,6 +140,18 @@
 		await setSessionUser(sessionUser, localStorage.getItem('redirectPath') || null);
 	};
 
+	// Handle success message from registration
+	const handleSuccessMessage = () => {
+		const success = $page.url.searchParams.get('success');
+		if (success) {
+			toast.success(success);
+			// Clear the success parameter from URL
+			const url = new URL(window.location.href);
+			url.searchParams.delete('success');
+			window.history.replaceState({}, '', url);
+		}
+	};
+
 	let onboarding = false;
 
 	async function setLogoImage() {
@@ -180,6 +192,9 @@
 			toast.error(error);
 		}
 
+		// Handle success message from registration
+		handleSuccessMessage();
+
 		await oauthCallbackHandler();
 		form = $page.url.searchParams.get('form');
 
@@ -190,6 +205,18 @@
 			await signInHandler();
 		} else {
 			onboarding = $config?.onboarding ?? false;
+
+			// Auto-redirect to OAuth provider when login form is hidden and only one provider exists
+			// This also handles the onboarding case — first user will be created as admin via OAuth
+			const oauthProviders = Object.keys($config?.oauth?.providers ?? {});
+			if (
+				!$config?.features.enable_login_form &&
+				!$config?.features.enable_ldap &&
+				oauthProviders.length === 1
+			) {
+				window.location.href = `${WEBUI_BASE_URL}/oauth/${oauthProviders[0]}/login`;
+				return;
+			}
 		}
 	});
 </script>
@@ -241,7 +268,7 @@
 									<img
 										id="logo"
 										crossorigin="anonymous"
-										src="{WEBUI_BASE_URL}/static/favicon.png"
+										src="{WEBUI_BASE_URL}/static/boutikio-logo.svg"
 										class="size-24 rounded-full"
 										alt="{$WEBUI_NAME} logo"
 									/>
@@ -271,7 +298,7 @@
 										<div class="mt-1 text-xs font-medium text-gray-600 dark:text-gray-500">
 											ⓘ {$WEBUI_NAME}
 											{$i18n.t(
-												'does not make any external connections, and your data stays securely on your locally hosted server.'
+												'connects securely to your Boutikio account to provide AI-powered assistance.'
 											)}
 										</div>
 									{/if}
@@ -554,6 +581,14 @@
 								</div>
 							{/if}
 
+							<!-- Registration link -->
+							<div class="mt-4 text-sm text-center">
+								<span class="text-gray-600 dark:text-gray-400">Pas encore de compte ?</span>
+								<a href="/register" class="font-medium underline ml-1 hover:text-[#C2420D]">
+									{$i18n.t('Créer un compte')}
+								</a>
+							</div>
+
 							{#if $config?.features.enable_ldap && $config?.features.enable_login_form}
 								<div class="mt-2">
 									<button
@@ -593,7 +628,7 @@
 						<img
 							id="logo"
 							crossorigin="anonymous"
-							src="{WEBUI_BASE_URL}/static/favicon.png"
+							src="{WEBUI_BASE_URL}/static/boutikio-logo.svg"
 							class=" w-6 rounded-full"
 							alt=""
 						/>

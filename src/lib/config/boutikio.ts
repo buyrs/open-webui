@@ -10,7 +10,7 @@ import { type LanguageCode, defaultLanguage, languages } from '$lib/i18n/seoTran
  */
 export const BOUTIKIO_BASE_URL: string =
 	(typeof import.meta !== 'undefined' && import.meta.env?.VITE_BOUTIKIO_BASE_URL) ||
-	'https://app.boutikio.com';
+	'https://web.boutikio.com';
 
 /**
  * Base URL for the Open WebUI frontend (canonical URLs, SEO).

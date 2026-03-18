@@ -34,27 +34,27 @@ Customize the Open WebUI fork to serve as Boutikio's partner-facing AI chat inte
 
 - [x] 2. Create embedded page routes
   - [x] 2.1 Create `src/routes/(app)/billing/+page.svelte`
-    - Import and render `EmbeddedPage` with `src="https://app.boutikio.com/embedded/billing"`, `title="Billing & Subscription"`, `allow="payment"`
+    - Import and render `EmbeddedPage` with `src="https://web.boutikio.com/embedded/billing"`, `title="Billing & Subscription"`, `allow="payment"`
     - _Requirements: 6.1, 6.4_
 
   - [x] 2.2 Create `src/routes/(app)/partner-settings/+page.svelte`
-    - Import and render `EmbeddedPage` with `src="https://app.boutikio.com/embedded/settings"`, `title="Account Settings"`
+    - Import and render `EmbeddedPage` with `src="https://web.boutikio.com/embedded/settings"`, `title="Account Settings"`
     - _Requirements: 6.1_
 
   - [x] 2.3 Create `src/routes/(app)/receipt-settings/+page.svelte`
-    - Import and render `EmbeddedPage` with `src="https://app.boutikio.com/embedded/receipt-settings"`, `title="Receipt Settings"`
+    - Import and render `EmbeddedPage` with `src="https://web.boutikio.com/embedded/receipt-settings"`, `title="Receipt Settings"`
     - _Requirements: 6.1_
 
   - [x] 2.4 Create `src/routes/(app)/card-preview/+page.svelte`
-    - Import and render `EmbeddedPage` with `src="https://app.boutikio.com/embedded/card-preview"`, `title="Card Preview"`
+    - Import and render `EmbeddedPage` with `src="https://web.boutikio.com/embedded/card-preview"`, `title="Card Preview"`
     - _Requirements: 6.1_
 
   - [x] 2.5 Create `src/routes/(app)/audit-log/+page.svelte`
-    - Import and render `EmbeddedPage` with `src="https://app.boutikio.com/embedded/audit-log"`, `title="Audit Log"`
+    - Import and render `EmbeddedPage` with `src="https://web.boutikio.com/embedded/audit-log"`, `title="Audit Log"`
     - _Requirements: 6.1_
 
   - [x] 2.6 Create `src/routes/(app)/members/+page.svelte`
-    - Import and render `EmbeddedPage` with `src="https://app.boutikio.com/embedded/members"`, `title="Members"`
+    - Import and render `EmbeddedPage` with `src="https://web.boutikio.com/embedded/members"`, `title="Members"`
     - _Requirements: 6.1_
 
 
@@ -62,7 +62,7 @@ Customize the Open WebUI fork to serve as Boutikio's partner-facing AI chat inte
     - **Property 1: Navigation-to-iframe mapping consistency**
     - **Validates: Requirements 5.1, 6.1**
     - Use vitest + fast-check to generate random subsets of the navigation config array
-    - For each item, verify the `href` maps to a valid route path and the corresponding iframe `src` follows the pattern `https://app.boutikio.com/embedded/{slug}`
+    - For each item, verify the `href` maps to a valid route path and the corresponding iframe `src` follows the pattern `https://web.boutikio.com/embedded/{slug}`
     - Verify no two nav items share the same `href` or the same iframe `src`
     - Minimum 100 iterations
 

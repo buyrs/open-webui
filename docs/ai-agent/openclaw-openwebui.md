@@ -26,7 +26,7 @@ This document covers everything that needs to be done in the Open WebUI fork to 
 ### Subdomain Architecture
 
 ```
-app.boutikio.com    → Laravel (Boutikio backend, OAuth, OpenClaw API, embedded pages)
+web.boutikio.com    → Laravel (Boutikio backend, OAuth, OpenClaw API, embedded pages)
 chat.boutikio.com   → Open WebUI (forked, partner chat interface)
 ```
 
@@ -55,7 +55,7 @@ services:
       - ENABLE_OAUTH_SIGNUP=true
       - ENABLE_LOGIN_FORM=false
       - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
-      - OAUTH_PROVIDERS={"boutikio":{"client_id":"open-webui","client_secret":"${BOUTIKIO_OAUTH_SECRET}","server_url":"https://app.boutikio.com","scope":"openid profile email partner","redirect_uri":"https://chat.boutikio.com/oauth/callback","provider_name":"Boutikio","icon_url":"/static/boutikio-logo.svg"}}
+      - OAUTH_PROVIDERS={"boutikio":{"client_id":"open-webui","client_secret":"${BOUTIKIO_OAUTH_SECRET}","server_url":"https://web.boutikio.com","scope":"openid profile email partner","redirect_uri":"https://chat.boutikio.com/oauth/callback","provider_name":"Boutikio","icon_url":"/static/boutikio-logo.svg"}}
 
       # LLM — Alibaba Cloud DashScope
       - OPENAI_API_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
@@ -144,7 +144,7 @@ Free quota: 1M tokens upon activation (90 days validity).
 
 ```
 Partner clicks "Login with Boutikio" on Open WebUI
-  → Redirects to https://app.boutikio.com/oauth/authorize
+  → Redirects to https://web.boutikio.com/oauth/authorize
   → Partner logs in (existing Boutikio auth)
   → Boutikio redirects back with authorization code
   → Open WebUI exchanges code for access token + ID token
@@ -175,7 +175,7 @@ When `ENABLE_OAUTH_TOKEN_EXCHANGE=true`, Open WebUI can pass the partner's Bouti
 1. Go to Settings → Tools
 2. Add new OpenAPI tool server:
    - Name: `OpenClaw`
-   - URL: `https://app.boutikio.com/openclaw/openapi.json`
+   - URL: `https://web.boutikio.com/openclaw/openapi.json`
    - Auth type: `system_oauth` (passes partner's Boutikio token)
 3. Open WebUI auto-discovers all tools from the OpenAPI spec
 
@@ -185,7 +185,7 @@ When `ENABLE_OAUTH_TOKEN_EXCHANGE=true`, Open WebUI can pass the partner's Bouti
 Partner: "How many members do I have?"
   → Open WebUI sends to Qwen3.5-Plus
   → Qwen3.5-Plus returns: tool_call(get_dashboard_stats, {period: "last_30_days"})
-  → Open WebUI calls: POST https://app.boutikio.com/openclaw/tools/get_dashboard_stats
+  → Open WebUI calls: POST https://web.boutikio.com/openclaw/tools/get_dashboard_stats
     with Authorization: Bearer <partner's Boutikio token>
   → OpenClaw validates token, executes service, returns JSON
   → Open WebUI sends result back to Qwen3.5-Plus
@@ -283,7 +283,7 @@ Each route renders an iframe pointing to the corresponding Boutikio embedded pag
 <div class="flex h-full w-full">
   <iframe
     bind:this={iframeEl}
-    src="https://app.boutikio.com/embedded/billing"
+    src="https://web.boutikio.com/embedded/billing"
     class="w-full h-full border-0"
     title="Billing & Subscription"
     allow="payment"

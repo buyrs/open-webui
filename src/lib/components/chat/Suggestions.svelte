@@ -90,7 +90,8 @@
 					role="listitem"
 					class="waterfall flex flex-col flex-1 shrink-0 w-full justify-between
 				       px-3 py-2 rounded-xl bg-transparent hover:bg-black/5
-				       dark:hover:bg-white/5 transition group"
+				       dark:hover:bg-white/5 hover:border-[#C2420D]/30 border border-transparent
+				       transition group"
 					style="animation-delay: {idx * 60}ms"
 					on:click={() => onSelect({ type: 'prompt', data: prompt.content })}
 				>

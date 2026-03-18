@@ -36,90 +36,97 @@
 
 {#key mounted}
 	<div class="m-auto w-full max-w-6xl px-8 lg:px-20">
-		<div class="flex justify-start">
-			<div class="flex -space-x-4 mb-0.5" in:fade={{ duration: 200 }}>
-				{#each models as model, modelIdx}
-					<button
-						on:click={() => {
-							selectedModelIdx = modelIdx;
-						}}
-					>
-						<Tooltip
-							content={marked.parse(
-								sanitizeResponseContent(
-									models[selectedModelIdx]?.info?.meta?.description ?? ''
-								).replaceAll('\n', '<br>')
-							)}
-							placement="right"
-						>
-							<img
-								src={`${WEBUI_API_BASE_URL}/models/model/profile/image?id=${model?.id}&lang=${$i18n.language}`}
-								class=" size-[2.7rem] rounded-full border-[1px] border-gray-100 dark:border-none"
-								alt="logo"
-								draggable="false"
-							/>
-						</Tooltip>
-					</button>
-				{/each}
-			</div>
-		</div>
-
-		{#if $temporaryChatEnabled}
-			<Tooltip
-				content={$i18n.t("This chat won't appear in history and your messages will not be saved.")}
-				className="w-full flex justify-start mb-0.5"
-				placement="top"
-			>
-				<div class="flex items-center gap-2 text-gray-500 text-lg mt-2 w-fit">
-					<EyeSlash strokeWidth="2.5" className="size-5" />{$i18n.t('Temporary Chat')}
-				</div>
-			</Tooltip>
-		{/if}
-
+		<!-- Gradient banner with greeting -->
 		<div
-			class=" mt-2 mb-4 text-3xl text-gray-800 dark:text-gray-100 text-left flex items-center gap-4 font-primary"
+			class="rounded-2xl p-6 mb-4 bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa] dark:from-[#431407] dark:via-[#7c2d12] dark:to-[#9a3412]"
 		>
-			<div>
-				<div class=" capitalize line-clamp-1" in:fade={{ duration: 200 }}>
-					{#if models[selectedModelIdx]?.name}
-						{models[selectedModelIdx]?.name}
-					{:else}
-						{$i18n.t('Hello, {{name}}', { name: $user?.name })}
+			<div class="flex justify-start">
+				<div class="flex -space-x-4 mb-0.5" in:fade={{ duration: 200 }}>
+					{#each models as model, modelIdx}
+						<button
+							on:click={() => {
+								selectedModelIdx = modelIdx;
+							}}
+						>
+							<Tooltip
+								content={marked.parse(
+									sanitizeResponseContent(
+										models[selectedModelIdx]?.info?.meta?.description ?? ''
+									).replaceAll('\n', '<br>')
+								)}
+								placement="right"
+							>
+								<img
+									src={`${WEBUI_API_BASE_URL}/models/model/profile/image?id=${model?.id}&lang=${$i18n.language}`}
+									class=" size-[2.7rem] rounded-full border-[1px] border-gray-100 dark:border-none"
+									alt="logo"
+									draggable="false"
+								/>
+							</Tooltip>
+						</button>
+					{/each}
+					<!-- Show Boutikio logo when no model images -->
+					{#if models.length === 0}
+						<img
+							src="{WEBUI_BASE_URL}/static/boutikio-logo.svg"
+							class="size-[2.7rem] rounded-full border-[1px] border-gray-100 dark:border-none"
+							alt="Boutikio logo"
+							draggable="false"
+						/>
 					{/if}
 				</div>
+			</div>
 
-				<div in:fade={{ duration: 200, delay: 200 }}>
-					{#if models[selectedModelIdx]?.info?.meta?.description ?? null}
-						<div
-							class="mt-0.5 text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-3 markdown"
-						>
-							{@html marked.parse(
-								sanitizeResponseContent(
-									models[selectedModelIdx]?.info?.meta?.description
-								).replaceAll('\n', '<br>')
-							)}
-						</div>
-						{#if models[selectedModelIdx]?.info?.meta?.user}
-							<div class="mt-0.5 text-sm font-normal text-gray-400 dark:text-gray-500">
-								By
-								{#if models[selectedModelIdx]?.info?.meta?.user.community}
-									<a
-										href="https://openwebui.com/m/{models[selectedModelIdx]?.info?.meta?.user
-											.username}"
-										>{models[selectedModelIdx]?.info?.meta?.user.name
-											? models[selectedModelIdx]?.info?.meta?.user.name
-											: `@${models[selectedModelIdx]?.info?.meta?.user.username}`}</a
-									>
-								{:else}
-									{models[selectedModelIdx]?.info?.meta?.user.name}
-								{/if}
+			{#if $temporaryChatEnabled}
+				<Tooltip
+					content={$i18n.t("This chat won't appear in history and your messages will not be saved.")}
+					className="w-full flex justify-start mb-0.5"
+					placement="top"
+				>
+					<div class="flex items-center gap-2 text-gray-600 dark:text-gray-300 text-lg mt-2 w-fit">
+						<EyeSlash strokeWidth="2.5" className="size-5" />{$i18n.t('Temporary Chat')}
+					</div>
+				</Tooltip>
+			{/if}
+
+			<div
+				class=" mt-2 mb-2 text-3xl text-gray-800 dark:text-gray-100 text-left flex items-center gap-4 font-primary"
+			>
+				<div>
+					<div class=" capitalize line-clamp-1" in:fade={{ duration: 200 }}>
+						{#if models[selectedModelIdx]?.name}
+							{models[selectedModelIdx]?.name}
+						{:else}
+							{$i18n.t('Hello, {{name}}', { name: $user?.name })}
+						{/if}
+					</div>
+
+					<div in:fade={{ duration: 200, delay: 200 }}>
+						{#if models[selectedModelIdx]?.info?.meta?.description ?? null}
+							<div
+								class="mt-0.5 text-base font-normal text-gray-600 dark:text-gray-300 line-clamp-3 markdown"
+							>
+								{@html marked.parse(
+									sanitizeResponseContent(
+										models[selectedModelIdx]?.info?.meta?.description
+									).replaceAll('\n', '<br>')
+								)}
+							</div>
+							{#if models[selectedModelIdx]?.info?.meta?.user}
+								<div class="mt-0.5 text-sm font-normal text-gray-500 dark:text-gray-400">
+									By
+									<!-- Removed openwebui.com link - display name as plain text -->
+									{models[selectedModelIdx]?.info?.meta?.user.name
+										? models[selectedModelIdx]?.info?.meta?.user.name
+										: ''}
+								</div>
+							{/if}
+						{:else}
+							<div class=" text-gray-500 dark:text-gray-400 line-clamp-1 font-p">
+								{$i18n.t('How can I help you today?')}
 							</div>
 						{/if}
-					{:else}
-						<div class=" text-gray-400 dark:text-gray-500 line-clamp-1 font-p">
-							{$i18n.t('How can I help you today?')}
-						</div>
-					{/if}
+					</div>
 				</div>
 			</div>
 		</div>

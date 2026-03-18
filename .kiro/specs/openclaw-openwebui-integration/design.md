@@ -33,13 +33,13 @@ graph TB
     
     OWUI -->|OpenAI-compatible API| DashScope[Alibaba Cloud DashScope<br/>Qwen3.5-Plus]
     DashScope -->|tool_call| OWUI
-    OWUI -->|POST /openclaw/tools/*<br/>Bearer token| OpenClaw[OpenClaw API<br/>app.boutikio.com]
+    OWUI -->|POST /openclaw/tools/*<br/>Bearer token| OpenClaw[OpenClaw API<br/>web.boutikio.com]
     OpenClaw --> Boutikio[Boutikio Laravel<br/>289+ Services]
     
     OWUI -->|OAuth redirect| BoutikioAuth[Boutikio OAuth<br/>OIDC Provider]
     BoutikioAuth -->|auth code callback| OWUI
     
-    OWUI -->|iframe src| EmbeddedPages[Embedded Pages<br/>app.boutikio.com/embedded/*]
+    OWUI -->|iframe src| EmbeddedPages[Embedded Pages<br/>web.boutikio.com/embedded/*]
     OWUI -.->|postMessage<br/>theme-sync| EmbeddedPages
 ```
 
@@ -48,7 +48,7 @@ graph TB
 | Domain | Service | Role |
 |--------|---------|------|
 | `chat.boutikio.com` | Open WebUI fork (this repo) | Partner chat UI, sidebar, embedded page routes |
-| `app.boutikio.com` | Boutikio Laravel | OAuth provider, OpenClaw API, embedded page content |
+| `web.boutikio.com` | Boutikio Laravel | OAuth provider, OpenClaw API, embedded page content |
 
 Both sit behind the same reverse proxy with a wildcard SSL cert for `*.boutikio.com`.
 
@@ -71,7 +71,7 @@ OAUTH_PROVIDERS: |
     "boutikio": {
       "client_id": "open-webui",
       "client_secret": "${BOUTIKIO_OAUTH_SECRET}",
-      "server_url": "https://app.boutikio.com",
+      "server_url": "https://web.boutikio.com",
       "scope": "openid profile email partner",
       "redirect_uri": "https://chat.boutikio.com/oauth/callback",
       "provider_name": "Boutikio",
@@ -82,7 +82,7 @@ OAUTH_PROVIDERS: |
 
 **Flow:**
 1. Partner visits `chat.boutikio.com` → sees "Login with Boutikio" button
-2. Redirect to `app.boutikio.com/oauth/authorize`
+2. Redirect to `web.boutikio.com/oauth/authorize`
 3. Partner authenticates with existing Boutikio credentials
 4. Callback to `chat.boutikio.com/oauth/callback` with authorization code
 5. Open WebUI exchanges code for access token + ID token
@@ -108,7 +108,7 @@ Maya system prompt configured in admin panel under Models → qwen3.5-plus.
 ### 3. OpenClaw Tool Server (Configuration-only)
 
 Registered in Open WebUI admin panel as an OpenAPI tool server:
-- URL: `https://app.boutikio.com/openclaw/openapi.json`
+- URL: `https://web.boutikio.com/openclaw/openapi.json`
 - Auth type: `system_oauth` (passes partner's Boutikio token)
 
 Open WebUI auto-discovers tools from the OpenAPI spec and injects them into the LLM's function calling context.
@@ -175,12 +175,12 @@ Each route is a thin wrapper around the `EmbeddedPage` component.
 
 | Route File | iframe src | Title | allow |
 |------------|-----------|-------|-------|
-| `src/routes/(app)/billing/+page.svelte` | `https://app.boutikio.com/embedded/billing` | Billing & Subscription | `payment` |
-| `src/routes/(app)/partner-settings/+page.svelte` | `https://app.boutikio.com/embedded/settings` | Account Settings | — |
-| `src/routes/(app)/receipt-settings/+page.svelte` | `https://app.boutikio.com/embedded/receipt-settings` | Receipt Settings | — |
-| `src/routes/(app)/card-preview/+page.svelte` | `https://app.boutikio.com/embedded/card-preview` | Card Preview | — |
-| `src/routes/(app)/audit-log/+page.svelte` | `https://app.boutikio.com/embedded/audit-log` | Audit Log | — |
-| `src/routes/(app)/members/+page.svelte` | `https://app.boutikio.com/embedded/members` | Members | — |
+| `src/routes/(app)/billing/+page.svelte` | `https://web.boutikio.com/embedded/billing` | Billing & Subscription | `payment` |
+| `src/routes/(app)/partner-settings/+page.svelte` | `https://web.boutikio.com/embedded/settings` | Account Settings | — |
+| `src/routes/(app)/receipt-settings/+page.svelte` | `https://web.boutikio.com/embedded/receipt-settings` | Receipt Settings | — |
+| `src/routes/(app)/card-preview/+page.svelte` | `https://web.boutikio.com/embedded/card-preview` | Card Preview | — |
+| `src/routes/(app)/audit-log/+page.svelte` | `https://web.boutikio.com/embedded/audit-log` | Audit Log | — |
+| `src/routes/(app)/members/+page.svelte` | `https://web.boutikio.com/embedded/members` | Members | — |
 
 Each route file imports `EmbeddedPage` and passes the appropriate props. Example:
 
@@ -190,7 +190,7 @@ Each route file imports `EmbeddedPage` and passes the appropriate props. Example
 </script>
 
 <EmbeddedPage
-  src="https://app.boutikio.com/embedded/billing"
+  src="https://web.boutikio.com/embedded/billing"
   title="Billing & Subscription"
   allow="payment"
 />
@@ -390,7 +390,7 @@ These variables are sent to embedded iframes via postMessage:
 
 ## OpenClaw Tool Reference
 
-Maya can invoke 42 tools through the OpenClaw API. These tools are auto-discovered from the OpenAPI spec at `https://app.boutikio.com/openclaw/openapi.json`.
+Maya can invoke 42 tools through the OpenClaw API. These tools are auto-discovered from the OpenAPI spec at `https://web.boutikio.com/openclaw/openapi.json`.
 
 ### Tool Categories
 
@@ -511,7 +511,7 @@ interface SidebarNavItem {
 
 ### Property 1: Navigation-to-iframe mapping consistency
 
-*For any* Boutikio sidebar navigation item in the configuration, the sidebar link's `href` should correspond to a SvelteKit route that renders an iframe whose `src` attribute points to the correct Boutikio embedded page URL (`https://app.boutikio.com/embedded/{page-slug}`).
+*For any* Boutikio sidebar navigation item in the configuration, the sidebar link's `href` should correspond to a SvelteKit route that renders an iframe whose `src` attribute points to the correct Boutikio embedded page URL (`https://web.boutikio.com/embedded/{page-slug}`).
 
 **Validates:** Requirements 5, 6
 
@@ -556,7 +556,7 @@ If OpenClaw returns an error (validation failure, subscription gate block), Open
 **Property Test 1: Navigation-to-iframe mapping**
 - Tag: `Feature: openclaw-openwebui-integration, Property 1`
 - Generate random subsets of the navigation config
-- For each item, verify the href maps to a valid route path and the corresponding iframe src follows the pattern `https://app.boutikio.com/embedded/{slug}`
+- For each item, verify the href maps to a valid route path and the corresponding iframe src follows the pattern `https://web.boutikio.com/embedded/{slug}`
 - Verify no two nav items share the same href or the same iframe src
 - Minimum 100 iterations
 

@@ -981,7 +981,7 @@ OAUTH_PROVIDERS: |
     "boutikio": {
       "client_id": "open-webui",
       "client_secret": "${BOUTIKIO_OAUTH_SECRET}",
-      "server_url": "https://app.boutikio.com",
+      "server_url": "https://web.boutikio.com",
       "scope": "openid profile email partner",
       "redirect_uri": "https://chat.boutikio.com/oauth/callback",
       "provider_name": "Boutikio",
@@ -993,7 +993,7 @@ ENABLE_OAUTH_TOKEN_EXCHANGE: true
 ```
 
 When a partner clicks "Login with Boutikio" on Open WebUI, the flow is:
-1. Open WebUI redirects to `https://app.boutikio.com/oauth/authorize`
+1. Open WebUI redirects to `https://web.boutikio.com/oauth/authorize`
 2. Partner logs in (existing Boutikio auth)
 3. Boutikio redirects back with authorization code
 4. Open WebUI exchanges code for access token + ID token
@@ -1230,7 +1230,7 @@ routes/embedded.php:
 **On Open WebUI side — fork and add routes:**
 
 ```
-src/routes/billing/+page.svelte      → <iframe src="https://app.boutikio.com/embedded/billing">
+src/routes/billing/+page.svelte      → <iframe src="https://web.boutikio.com/embedded/billing">
 src/routes/settings/+page.svelte     → <iframe src="...">
 src/routes/card-preview/+page.svelte → <iframe src="...">
 src/routes/audit-log/+page.svelte    → <iframe src="...">
