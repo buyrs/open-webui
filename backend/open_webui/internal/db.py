@@ -70,11 +70,10 @@ def handle_peewee_migration(DATABASE_URL):
         raise
     finally:
         # Properly closing the database connection
-        if db and not db.is_closed():
-            db.close()
-
-        # Assert if db connection has been closed
-        assert db.is_closed(), "Database connection is still open."
+        if db is not None:
+            if not db.is_closed():
+                db.close()
+            assert db.is_closed(), "Database connection is still open."
 
 
 if ENABLE_DB_MIGRATIONS:
