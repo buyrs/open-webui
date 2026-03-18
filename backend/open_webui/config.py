@@ -511,6 +511,11 @@ OAUTH_PROVIDER_NAME = PersistentConfig(
     os.environ.get("OAUTH_PROVIDER_NAME", "SSO"),
 )
 
+# Individual OAuth endpoint URLs (used when OPENID_PROVIDER_URL discovery is not available)
+OAUTH_AUTHORIZE_URL = os.environ.get("OAUTH_AUTHORIZE_URL", "")
+OAUTH_TOKEN_URL = os.environ.get("OAUTH_TOKEN_URL", "")
+OAUTH_USERINFO_URL = os.environ.get("OAUTH_USERINFO_URL", "")
+
 OAUTH_SUB_CLAIM = PersistentConfig(
     "OAUTH_SUB_CLAIM",
     "oauth.oidc.sub_claim",
@@ -767,7 +772,7 @@ def load_oauth_providers():
     if (
         OAUTH_CLIENT_ID.value
         and (OAUTH_CLIENT_SECRET.value or OAUTH_CODE_CHALLENGE_METHOD.value)
-        and OPENID_PROVIDER_URL.value
+        and (OPENID_PROVIDER_URL.value or (OAUTH_AUTHORIZE_URL and OAUTH_TOKEN_URL))
     ):
 
         def oidc_oauth_register(oauth: OAuth):
@@ -796,14 +801,25 @@ def load_oauth_providers():
                     % ("S256", OAUTH_CODE_CHALLENGE_METHOD.value)
                 )
 
-            client = oauth.register(
-                name="oidc",
-                client_id=OAUTH_CLIENT_ID.value,
-                client_secret=OAUTH_CLIENT_SECRET.value,
-                server_metadata_url=OPENID_PROVIDER_URL.value,
-                client_kwargs=client_kwargs,
-                redirect_uri=OPENID_REDIRECT_URI.value,
-            )
+            register_kwargs = {
+                "name": "oidc",
+                "client_id": OAUTH_CLIENT_ID.value,
+                "client_secret": OAUTH_CLIENT_SECRET.value,
+                "client_kwargs": client_kwargs,
+                "redirect_uri": OPENID_REDIRECT_URI.value,
+            }
+
+            if OPENID_PROVIDER_URL.value:
+                # Use OpenID Connect discovery endpoint
+                register_kwargs["server_metadata_url"] = OPENID_PROVIDER_URL.value
+            else:
+                # Use individual OAuth endpoint URLs
+                register_kwargs["authorize_url"] = OAUTH_AUTHORIZE_URL
+                register_kwargs["access_token_url"] = OAUTH_TOKEN_URL
+                if OAUTH_USERINFO_URL:
+                    register_kwargs["userinfo_endpoint"] = OAUTH_USERINFO_URL
+
+            client = oauth.register(**register_kwargs)
             return client
 
         OAUTH_PROVIDERS["oidc"] = {

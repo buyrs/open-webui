@@ -12,17 +12,24 @@ services:
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
 
       # CORS — restrict to known origins in production
-      - CORS_ALLOW_ORIGIN=https://chat.boutikio.com;https://app.boutikio.com
+      - CORS_ALLOW_ORIGIN=https://chat.boutikio.com;https://web.boutikio.com
 
-      # Database — uncomment for PostgreSQL in production (SQLite is default)
-      # - DATABASE_URL=postgresql://user:password@db:5432/openwebui_boutikio
+      # Database (MariaDB on Plesk host)
+      - DATABASE_URL=${DATABASE_URL}
 
       # OAuth Configuration
       - ENABLE_OAUTH_SIGNUP=true
       - ENABLE_LOGIN_FORM=false
       - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
       - ENABLE_OAUTH_TOKEN_EXCHANGE=true
-      - OAUTH_PROVIDERS=${OAUTH_PROVIDERS_JSON}
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+      - OAUTH_PROVIDER_NAME=${OAUTH_PROVIDER_NAME}
+      - OAUTH_SCOPES=${OAUTH_SCOPES}
+      - OPENID_REDIRECT_URI=${OPENID_REDIRECT_URI}
+      - OAUTH_AUTHORIZE_URL=${OAUTH_AUTHORIZE_URL}
+      - OAUTH_TOKEN_URL=${OAUTH_TOKEN_URL}
+      - OAUTH_USERINFO_URL=${OAUTH_USERINFO_URL}
 
       # LLM Configuration (Alibaba Cloud DashScope)
       - OPENAI_API_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
@@ -51,6 +58,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped
 
 volumes:
